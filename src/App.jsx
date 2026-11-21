@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Activity, Boxes, CalendarDays, ChartNoAxesCombined, Check, ChevronDown, ClipboardList, Factory, FileText, LayoutDashboard, LogOut, Menu, Package, Plus, Search, Settings, ShieldCheck, Truck, Users, X, Wallet } from 'lucide-react';
+import { Activity, Boxes, CalendarDays, ChartNoAxesCombined, Check, ChevronDown, ClipboardList, Factory, FileDown, FileText, LayoutDashboard, LogOut, Menu, Package, Plus, Printer, Search, Settings, ShieldCheck, Truck, Users, X, Wallet } from 'lucide-react';
 import { isSupabaseConfigured, supabase } from './lib/supabase';
 
 const nav = [
@@ -242,7 +242,7 @@ function InvoicesPage({invoices,items,orders,customers,onCreate,canCreate}){
     <div style={{display:'flex',justifyContent:'space-between',gap:24,marginTop:58}}><div style={{borderTop:'1px solid #8494a5',width:180,paddingTop:8,fontSize:12}}>Prepared By / جوړوونکی</div><div style={{borderTop:'1px solid #8494a5',width:180,paddingTop:8,fontSize:12,textAlign:'right'}}>Received By / ترلاسه کوونکی</div></div>
     <div style={{borderTop:'1px solid #e5ebf1',marginTop:30,paddingTop:12,textAlign:'center',fontSize:11,color:'#65778a'}}>IMCCD · Carton Manufacturing · Computer Generated Invoice</div>
    </div>
-   <div className="no-print" style={{display:'flex',gap:10,padding:'14px 22px',background:'#f5f8fb',borderTop:'1px solid #e5ebf1'}}><button className="btn primary" type="button" onClick={()=>window.print()}>چاپ / Save as PDF</button><button className="btn secondary" type="button" onClick={()=>setSelectedInvoice(null)}>بند</button></div>
+   <div className="no-print invoice-actions" style={{display:'flex',gap:12,padding:'18px 22px',background:'#f5f8fb',borderTop:'1px solid #e5ebf1',flexWrap:'wrap'}}><button className="btn primary invoice-action-btn" type="button" onClick={()=>window.print()}><Printer size={19}/> چاپ بل</button><button className="btn secondary invoice-action-btn" type="button" onClick={()=>window.print()}><FileDown size={19}/> PDF خوندي کول</button><button className="btn secondary invoice-action-btn" type="button" onClick={()=>setSelectedInvoice(null)}>بندول</button><span style={{fontSize:13,fontWeight:700,color:'#142b43',alignSelf:'center'}}>د PDF لپاره په پرانیستل شوې کړکۍ کې “Save as PDF” وټاکئ.</span></div>
   </div>}
  </div>;
 }
