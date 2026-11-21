@@ -22,3 +22,61 @@ textarea{font:inherit;border:1px solid #dfe7ee;border-radius:8px;padding:10px 11
 .sidebar-bottom {
   flex: 0 0 auto;
 }
+
+
+/* IMCCD accessibility: larger type and high-contrast text on desktop and mobile */
+:root{font-size:16px;color:#101820}
+body,.app-shell{color:#101820}
+.sidebar{color:#fff}
+.nav-item{font-size:15px!important;font-weight:700!important;color:#f1f5f9!important}
+.nav-item.active{color:#ffe0a0!important}
+.nav-caption,.secure{color:#d5e2ef!important;font-size:13px!important}
+.brand small,.eyebrow,.page-toolbar p,.section-heading p,.table-tools,.stat-top,.stat-card small,
+.customer-card small,.font-note,.settings-card p,.settings-card small,.login-panel p,.muted,
+.coming p,.empty,.count-pill{color:#34495e!important}
+.topbar h1{font-size:23px!important;color:#101820!important}
+.content{font-size:16px}
+.page-toolbar h2,.section-heading h3{font-size:20px!important;color:#101820!important}
+.welcome h2{font-size:25px!important}
+.welcome p{font-size:15px!important;color:#fff!important}
+.stat-top{font-size:14px!important;font-weight:700!important}
+.stat-card strong{font-size:30px!important;color:#071827!important}
+th{font-size:14px!important;font-weight:800!important;color:#14283d!important}
+td{font-size:14px!important;color:#172b40!important}
+.btn{font-size:15px!important;font-weight:800!important;padding:12px 17px!important}
+.form-grid label,.login-panel label{font-size:14px!important;font-weight:800!important;color:#172b40!important}
+.form-grid input,.form-grid select,.form-grid textarea,.login-panel input,textarea,.searchbox input{font-size:15px!important;color:#101820!important;font-weight:600}
+input::placeholder,textarea::placeholder{color:#4b5563!important;opacity:1!important}
+.settings-card h3{font-size:20px!important;color:#101820!important}
+.settings-card p,.font-note{font-size:14px!important;color:#26384a!important}
+.font-option{font-size:15px!important;color:#101820!important;font-weight:700}
+.font-preview{color:#071827!important;font-weight:800}
+.alert{font-size:14px!important;color:#7f1d1d!important;font-weight:700}
+.status{font-size:13px!important;font-weight:800!important;color:#14532d!important}
+.invoice-action-btn{min-height:52px!important;padding:14px 22px!important;font-size:17px!important}
+.invoice-actions span{color:#142b43!important}
+@media(max-width:760px){
+  body{font-size:16px}
+  .topbar h1{font-size:20px!important}
+  .eyebrow{font-size:11px!important}
+  .content{padding:20px 14px 40px}
+  .page-toolbar h2{font-size:20px!important}
+  .page-toolbar p{font-size:14px!important}
+  .welcome h2{font-size:22px!important}
+  .welcome p{font-size:14px!important}
+  .stat-top{font-size:13px!important}
+  .stat-card strong{font-size:27px!important}
+  th{font-size:13px!important}
+  td{font-size:14px!important}
+  .table-tools,.table-tools>span{font-size:13px!important}
+  .btn{font-size:14px!important;padding:12px 14px!important}
+  .form-grid label,.login-panel label{font-size:14px!important}
+  .form-grid input,.form-grid select,.form-grid textarea,.login-panel input,textarea,.searchbox input{font-size:16px!important}
+  .font-note,.settings-card p{font-size:14px!important}
+  .invoice-action-btn{width:100%;font-size:16px!important;min-height:54px!important}
+  .invoice-actions span{width:100%;font-size:13px!important}
+}
+@media print{
+  #imccd-invoice-print{color:#000!important;background:#fff!important}
+  #imccd-invoice-print *{print-color-adjust:exact!important;-webkit-print-color-adjust:exact!important}
+}
