@@ -123,7 +123,7 @@ export default function App(){
 
  const filteredOrders=useMemo(()=>orders.filter(o=>[o.order_no,o.customers?.name,o.size,o.machine].join(' ').toLowerCase().includes(search.toLowerCase())),[orders,search]);
  const totalQty=orders.reduce((s,o)=>s+Number(o.quantity||0),0),totalMade=orders.reduce((s,o)=>s+Number(o.produced_qty||0),0),totalSent=orders.reduce((s,o)=>s+Number(o.dispatched_qty||0),0);
- useEffect(()=>{if(page==='settings'&&role!=='admin')setPage('dashboard');},[page,role]);
+ useEffect(()=>{if(role==='manager'&&!['orders','invoices'].includes(page))setPage('orders');else if(page==='settings'&&role!=='admin')setPage('dashboard');},[page,role]);
  if(!isSupabaseConfigured)return <SetupScreen/>;if(!session)return <Login email={email} setEmail={setEmail} password={password} setPassword={setPassword} login={login} error={error}/>;
  const open=(name)=>{setError('');setModal(name);};
  const canEdit=role==='admin';
