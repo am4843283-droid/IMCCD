@@ -1,0 +1,26 @@
+{
+  "name": "IMCCD Factory ERP",
+  "short_name": "IMCCD",
+  "description": "Carton factory management system",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f4f7fb",
+  "theme_color": "#102b46",
+  "lang": "ps",
+  "dir": "rtl",
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
