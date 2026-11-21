@@ -80,3 +80,23 @@ input::placeholder,textarea::placeholder{color:#4b5563!important;opacity:1!impor
   #imccd-invoice-print{color:#000!important;background:#fff!important}
   #imccd-invoice-print *{print-color-adjust:exact!important;-webkit-print-color-adjust:exact!important}
 }
+
+
+/* IMCCD readability and navigation refinement */
+.welcome h2{font-size:30px!important;line-height:1.65!important;font-weight:900!important}
+.welcome p{font-size:18px!important;font-weight:800!important;color:#fff!important;margin-top:8px!important}
+.back-btn{border:1px solid #cbd6e0;background:#f1f5f8;color:#173e5c;border-radius:10px;padding:10px 15px;font-size:15px;font-weight:900;white-space:nowrap}
+.back-btn:hover{background:#e3edf4}
+.invoice-actions-top{position:sticky;top:90px;z-index:9}
+.invoice-actions-top .invoice-action-btn{min-width:150px}
+th{font-size:15px!important}
+td{font-size:15px!important}
+@media(max-width:760px){
+ .welcome h2{font-size:23px!important;line-height:1.7!important}
+ .welcome p{font-size:16px!important}
+ .back-btn{padding:9px 10px;font-size:13px}
+ .invoice-actions-top{top:74px;padding:12px!important}
+ .invoice-actions-top .invoice-action-btn{min-width:0}
+ th{font-size:14px!important}
+ td{font-size:15px!important}
+}
