@@ -8,6 +8,7 @@ exception when duplicate_object then null; end $$;
 create table if not exists public.profiles (
   id uuid primary key references auth.users(id) on delete cascade,
   full_name text,
+  username text unique,
   role public.app_role not null default 'viewer',
   created_at timestamptz not null default now()
 );
@@ -33,6 +34,7 @@ create table if not exists public.orders (
   paper_color text,
   paper_name text,
   machine text,
+  order_tracker text,
   produced_qty integer not null default 0 check (produced_qty >= 0),
   dispatched_qty integer not null default 0 check (dispatched_qty >= 0),
   notes text,
@@ -45,44 +47,56 @@ create table if not exists public.orders (
 create index if not exists orders_date_idx on public.orders(order_date desc);
 create index if not exists orders_customer_idx on public.orders(customer_id);
 
-create or replace function public.current_user_role()
+create schema if not exists private;
+
+create or replace function private.current_user_role()
 returns public.app_role
 language sql stable security definer
-set search_path = public
-as $$
-  select role from public.profiles where id = auth.uid()
-$$;
+set search_path = ''
+as $
+  select p.role from public.profiles p where p.id = auth.uid()
+$;
+revoke all on function private.current_user_role() from public, anon;
+grant usage on schema private to authenticated;
+grant execute on function private.current_user_role() to authenticated;
 
 alter table public.profiles enable row level security;
 alter table public.customers enable row level security;
 alter table public.orders enable row level security;
 
 drop policy if exists "Users can read own profile" on public.profiles;
-create policy "Users can read own profile" on public.profiles
-for select to authenticated using (id = auth.uid() or public.current_user_role() = 'admin');
-
 drop policy if exists "Admins manage profiles" on public.profiles;
+create policy "Users can read own profile" on public.profiles
+for select to authenticated using (id = auth.uid() or private.current_user_role() = 'admin');
 create policy "Admins manage profiles" on public.profiles
-for all to authenticated using (public.current_user_role() = 'admin')
-with check (public.current_user_role() = 'admin');
+for all to authenticated using (private.current_user_role() = 'admin')
+with check (private.current_user_role() = 'admin');
 
 drop policy if exists "Signed-in users read customers" on public.customers;
+drop policy if exists "Managers and admins write customers" on public.customers;
+drop policy if exists "customers_admin_write" on public.customers;
 create policy "Signed-in users read customers" on public.customers
 for select to authenticated using (true);
-
-drop policy if exists "Managers and admins write customers" on public.customers;
-create policy "Managers and admins write customers" on public.customers
-for all to authenticated using (public.current_user_role() in ('admin','manager'))
-with check (public.current_user_role() in ('admin','manager'));
+create policy "customers_admin_write" on public.customers
+for all to authenticated using (private.current_user_role() = 'admin')
+with check (private.current_user_role() = 'admin');
 
 drop policy if exists "Signed-in users read orders" on public.orders;
+drop policy if exists "Managers and admins write orders" on public.orders;
+drop policy if exists "orders_admin_write" on public.orders;
+drop policy if exists "orders_manager_insert_only" on public.orders;
 create policy "Signed-in users read orders" on public.orders
 for select to authenticated using (true);
-
-drop policy if exists "Managers and admins write orders" on public.orders;
-create policy "Managers and admins write orders" on public.orders
-for all to authenticated using (public.current_user_role() in ('admin','manager'))
-with check (public.current_user_role() in ('admin','manager'));
+create policy "orders_admin_write" on public.orders
+for all to authenticated using (private.current_user_role() = 'admin')
+with check (private.current_user_role() = 'admin');
+create policy "orders_manager_insert_only" on public.orders
+for insert to authenticated with check (
+  private.current_user_role() = 'manager'
+  and created_by = auth.uid()
+  and order_tracker is not null
+  and length(btrim(order_tracker)) > 0
+);
 
 -- Realtime publication for live order/customer refresh.
 do $$ begin
