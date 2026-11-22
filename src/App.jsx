@@ -100,8 +100,7 @@ export default function App(){
   try{const parsed=await parseIMCCDWorkbook(file);const {data:existingOrders,error:existingError}=await supabase.from('orders').select('order_no,produced_qty,dispatched_qty');if(existingError)throw existingError;const existingMap=new Map((existingOrders||[]).map(o=>[Number(o.order_no),o]));const conflicts=parsed.payload.orders.filter(o=>existingMap.has(Number(o.order_no))).map(o=>({...o,existing:existingMap.get(Number(o.order_no))}));setWorkbookPreview({...parsed,conflicts});}
   catch(err){setError('Excel فایل لوستل نه شو: '+(err?.message||String(err)));}finally{setWorkbookBusy(false);e.target.value='';}
  }
- async function createAppUsers(body){const {data,error}=await supabase.functions.invoke('imccd-admin-users',{body});if(error){let detail=error.message||'د کارنانو جوړول ناکام شول.';try{const bodyData=await error.context?.clone?.().json();if(bodyData?.error)detail=bodyData.error+(bodyData?.details?': '+bodyData.details:bodyData?.detectedRole?': '+bodyData.detectedRole:'');else if(bodyData?.message)detail=bodyData.message;}catch{}setError(detail);return null;}if(data?.error){setError(data.error);return data;}return data;}
- async function provisionFixedUsers(){return createAppUsers({action:'provision_fixed'});}
+ async function createAppUsers(users){const {data,error}=await supabase.functions.invoke('imccd-admin-users',{body:{users}});if(error){let detail=error.message||'د کارنانو جوړول ناکام شول.';try{const bodyData=await error.context?.clone?.().json();if(bodyData?.error)detail=bodyData.error+(bodyData?.details?': '+bodyData.details:bodyData?.detectedRole?': '+bodyData.detectedRole:'');else if(bodyData?.message)detail=bodyData.message;}catch{}setError(detail);return null;}if(data?.error){setError(data.error);return data;}return data;}
  async function importWorkbook(){
   if(role!=='admin'){setError('یوازې اډمین Excel واردولی شي.');return;}if(!workbookPreview||importBusy)return;
   if(replaceExisting&&!window.confirm('خبرتیا: د Excel واردولو پر مهال به د اپ ټول پخواني کاروباري معلومات پاک او د دې فایل په معلوماتو بدل شي. د ننوتلو حسابونه به پاتې وي. دوام ورکړو؟'))return;
@@ -161,7 +160,7 @@ export default function App(){
   {page==='salary'&&<Salary employees={employees} entries={salaries} onAdd={()=>{setEditingRow(null);setSalaryForm({employee_id:'',salary_month:monthStart(),amount:'',paid_date:today(),notes:''});open('salary')}} onEdit={editSalary} onDelete={x=>deleteRecord('salary_entries',x)} loading={loading} canEdit={canEdit}/>}
   {page==='invoices'&&<InvoicesPage canCreate={role==='admin'||role==='manager'} invoices={invoices} items={items} orders={orders} customers={customers} onCreate={async payload=>{const {error}=await supabase.rpc('create_imccd_invoice',{p_invoice_type:payload.invoice_type,p_invoice_date:payload.invoice_date,p_party_name:payload.party_name,p_reference:payload.reference,p_notes:payload.notes,p_lines:payload.lines});if(error){setError(error.message);return false;}await loadData();return true;}}/>}
   {page==='reports'&&<Reports orders={orders} production={production} dispatches={dispatches} items={items} attendance={attendance} salaries={salaries}/>}
-  {page==='settings'&&<SettingsPage font={font} setFont={setFont} email={session.user.email} workbookPreview={workbookPreview} workbookBusy={workbookBusy} importBusy={importBusy} replaceExisting={replaceExisting} setReplaceExisting={setReplaceExisting} importResult={importResult} onWorkbookSelected={handleWorkbookSelected} onImportWorkbook={importWorkbook} onProvisionFixed={provisionFixedUsers}/>}
+  {page==='settings'&&<SettingsPage font={font} setFont={setFont} email={session.user.email} workbookPreview={workbookPreview} workbookBusy={workbookBusy} importBusy={importBusy} replaceExisting={replaceExisting} setReplaceExisting={setReplaceExisting} importResult={importResult} onWorkbookSelected={handleWorkbookSelected} onImportWorkbook={importWorkbook} onCreateUsers={createAppUsers}/>}
   </main>
   {modal==='customer'&&<Modal title={editingCustomer?'د پېرېدونکي معلومات بدل کړئ':'نوی پېرېدونکی'} onClose={()=>{setModal('');setEditingCustomer(null);}}><form onSubmit={saveCustomer}><div className="form-grid"><Field label="د پېرېدونکي نوم"><input required value={customerForm.name} onChange={e=>setCustomerForm({...customerForm,name:e.target.value})}/></Field><Field label="د تلیفون شمېره"><input value={customerForm.phone} onChange={e=>setCustomerForm({...customerForm,phone:e.target.value})}/></Field><Field label="پته"><input value={customerForm.address} onChange={e=>setCustomerForm({...customerForm,address:e.target.value})}/></Field><Field label="یادښت" wide><textarea value={customerForm.notes} onChange={e=>setCustomerForm({...customerForm,notes:e.target.value})}/></Field></div><Actions close={()=>setModal('')} saving={saving}/></form></Modal>}
   {modal==='order'&&<Modal title={editingRow?.table==='orders'?'فرمایش بدل کړئ':'نوی فرمایش ثبت کړئ'} onClose={()=>{setModal('');setEditingRow(null);}}><form onSubmit={saveOrder}><div className="form-grid"><Field label="د فرمایش شمېره"><input required type="number" value={orderForm.order_no} onChange={e=>setOrderForm({...orderForm,order_no:e.target.value})}/></Field><Field label="نېټه"><AfghanDateInput required value={orderForm.order_date} onChange={v=>setOrderForm({...orderForm,order_date:v})}/></Field><Field label="پېرېدونکی" wide><select required value={orderForm.customer_id} onChange={e=>setOrderForm({...orderForm,customer_id:e.target.value})}><option value="">پېرېدونکی وټاکئ</option>{customers.map(c=><option key={c.id} value={c.id}>{c.name}</option>)}</select></Field><Field label="مقدار"><input required min="1" type="number" value={orderForm.quantity} onChange={e=>setOrderForm({...orderForm,quantity:e.target.value})}/></Field><Field label="سایز"><input value={orderForm.size} onChange={e=>setOrderForm({...orderForm,size:e.target.value})}/></Field><Field label="پله"><input type="number" value={orderForm.ply} onChange={e=>setOrderForm({...orderForm,ply:e.target.value})}/></Field><Field label="د کاغذ رنګ"><input value={orderForm.paper_color} onChange={e=>setOrderForm({...orderForm,paper_color:e.target.value})}/></Field><Field label="د کاغذ نوم"><input value={orderForm.paper_name} onChange={e=>setOrderForm({...orderForm,paper_name:e.target.value})}/></Field><Field label="ماشین"><input value={orderForm.machine} onChange={e=>setOrderForm({...orderForm,machine:e.target.value})}/></Field><Field label="بل نمبر"><input value={orderForm.bill_no} onChange={e=>setOrderForm({...orderForm,bill_no:e.target.value})}/></Field><Field label="حالت"><select value={orderForm.status} onChange={e=>setOrderForm({...orderForm,status:e.target.value})}><option value="pending">لا پاتې</option><option value="in_progress">د تولید په حال کې</option><option value="completed">بشپړ</option></select></Field><Field label="د ضایعاتو مقدار"><input type="number" min="0" step="0.01" value={orderForm.waste_qty} onChange={e=>setOrderForm({...orderForm,waste_qty:e.target.value})}/></Field><Field label="د تکمیل نېټه"><AfghanDateInput value={orderForm.completion_date} onChange={v=>setOrderForm({...orderForm,completion_date:v})}/></Field><Field label="عاجل فرمایش"><input type="checkbox" checked={orderForm.is_urgent} onChange={e=>setOrderForm({...orderForm,is_urgent:e.target.checked})}/></Field><Field label="د فرمایش ثبتوونکی"><input required={role==='manager'} value={orderForm.order_tracker} onChange={e=>setOrderForm({...orderForm,order_tracker:e.target.value})} readOnly={false}/></Field></div><Actions close={()=>setModal('')} saving={saving}/></form></Modal>}
@@ -277,28 +276,31 @@ function InvoicesPage({invoices,items,orders,customers,onCreate,canCreate}){
  </div>;
 }
 
-function UserProvisioning({onProvisionFixed}){
- const users=[
-  {username:'Jameelurrahman',full_name:'Jameel ur Rahman',email:'jamilsherzad1@gmail.com',role:'manager'},
-  {username:'Doctorsahib',full_name:'Doctor Sahib',email:'rahman.shirzad2006@gmail.com',role:'manager'},
-  {username:'Mudeersahib',full_name:'Mudeer Sahib',email:'rozbah.zalgai@gmail.com',role:'manager'},
-  {username:'Mehman1',full_name:'Guest 1',email:'Username login',role:'viewer'},
-  {username:'Mehman2',full_name:'Guest 2',email:'Username login',role:'viewer'},
-  {username:'Mehman3',full_name:'Guest 3',email:'Username login',role:'viewer'},
-  {username:'Mehman4',full_name:'Guest 4',email:'Username login',role:'viewer'},
-  {username:'Mehman5',full_name:'Guest 5',email:'Username login',role:'viewer'}
+function UserProvisioning({onCreateUsers}){
+ const initial=[
+  {username:'Jameelurrahman',full_name:'Jameel ur Rahman',role:'manager',password:''},
+  {username:'Doctorsahib',full_name:'Doctor Sahib',role:'manager',password:''},
+  {username:'Mudeersahib',full_name:'Mudeer Sahib',role:'manager',password:''},
+  {username:'Mehman1',full_name:'Guest 1',role:'viewer',password:''},
+  {username:'Mehman2',full_name:'Guest 2',role:'viewer',password:''},
+  {username:'Mehman3',full_name:'Guest 3',role:'viewer',password:''},
+  {username:'Mehman4',full_name:'Guest 4',role:'viewer',password:''},
+  {username:'Mehman5',full_name:'Guest 5',role:'viewer',password:''}
  ];
- const [busy,setBusy]=useState(false),[result,setResult]=useState('');
- async function submit(){setResult('');if(!window.confirm('د دغو ۸ حسابونو برېښنالیکونه او ثابت پټ نومونه ثبت/تازه شي؟'))return;setBusy(true);const response=await onProvisionFixed();setBusy(false);if(response?.success)setResult('ټول حسابونه په بریالیتوب ثبت شول.');else setResult(response?.error||'حسابونه ثبت نه شول؛ د تېروتنې پیغام وګورئ.');}
+ const [users,setUsers]=useState(initial),[busy,setBusy]=useState(false),[result,setResult]=useState('');
+ async function submit(e){e.preventDefault();setResult('');if(users.some(u=>u.password.length<8)){setResult('د هر حساب پټ نوم باید لږ تر لږه ۸ توري ولري.');return;}setBusy(true);const response=await onCreateUsers(users);setBusy(false);if(response?.success){setResult('بریالي شول: '+response.users.map(u=>u.full_name).join('، '));setUsers(initial.map(u=>({...u})));}else if(response?.error)setResult(response.error);else setResult('کارنونه جوړ نه شول؛ د تېروتنې پیغام وګورئ.');}
  return <div className="table-card settings-card" style={{marginTop:18}}>
-  <h3>ثابت مدیران او مېلمانه</h3><p>د دې حسابونو نومونه، برېښنالیکونه او پټ نومونه ټاکل شوي دي. د پټ نومونو ارزښتونه په اپ کې نه ښودل کېږي او نه بدلېږي.</p>
-  <div className="table-wrap"><table><thead><tr><th>نوم</th><th>کارن نوم</th><th>برېښنالیک / ننوتل</th><th>صلاحیت</th></tr></thead><tbody>{users.map(u=><tr key={u.username}><td><b>{u.full_name}</b></td><td>{u.username}</td><td>{u.email}</td><td>{u.role==='manager'?'Manager':'Guest · View only'}</td></tr>)}</tbody></table></div>
-  <button type="button" className="btn primary" disabled={busy} onClick={submit} style={{marginTop:14}}>{busy?'حسابونه تثبیتېږي...':'ټول ۸ ثابت حسابونه تثبیت کړئ'}</button>
+  <h3>د مدیرانو او مېلمنو حسابونه</h3><p>دا حسابونه یوازې اډمین جوړولی شي. پټ نومونه یوازې د حساب جوړولو پر مهال لېږل کېږي؛ اپ یې په ښکاره بڼه نه ساتي.</p>
+  <form onSubmit={submit}>
+   <div className="table-wrap"><table><thead><tr><th>ښودل کېدونکی نوم</th><th>کارن نوم</th><th>صلاحیت</th><th>پټ نوم</th></tr></thead><tbody>
+    {users.map((u,i)=><tr key={u.username}><td><b>{u.full_name}</b></td><td>{u.username}</td><td>{u.role==='manager'?'Manager':'Guest / View only'}</td><td><input type="password" required minLength={8} autoComplete="new-password" value={u.password} onChange={e=>setUsers(prev=>prev.map((x,j)=>j===i?{...x,password:e.target.value}:x))} placeholder="لږ تر لږه ۸ توري"/></td></tr>)}
+   </tbody></table></div>
+   <button className="btn primary" disabled={busy} style={{marginTop:14}}>{busy?'حسابونه جوړېږي...':'ټول ۸ حسابونه جوړ کړئ'}</button>
+  </form>
   {result&&<p className="font-note" style={{marginTop:12}}>{result}</p>}
  </div>
 }
-
-function SettingsPage({font,setFont,email,workbookPreview,workbookBusy,importBusy,replaceExisting,setReplaceExisting,importResult,onWorkbookSelected,onImportWorkbook,onProvisionFixed}){
+function SettingsPage({font,setFont,email,workbookPreview,workbookBusy,importBusy,replaceExisting,setReplaceExisting,importResult,onWorkbookSelected,onImportWorkbook,onCreateUsers}){
  const fonts=['Noto Sans Arabic','Bahij Badr','Lateef','Amiri'],counts=workbookPreview?.counts;
  return <div className="content">
   <div className="page-toolbar"><div><h2>تنظیمات</h2><p>د اپلیکیشن د لیکدود بڼه او د Excel پخواني معلومات</p></div></div>
@@ -324,7 +326,7 @@ function SettingsPage({font,setFont,email,workbookPreview,workbookBusy,importBus
    {importResult&&<div className="alert" style={{marginTop:14,display:'block'}}>واردول بشپړ شول — پېرېدونکي: {fmt(importResult.customers)}، فرمایشونه: {fmt(importResult.orders)}، سټاک توکي: {fmt(importResult.stock_items)}، لېږدونه: {fmt(importResult.dispatches)}، کارکوونکي: {fmt(importResult.employees)}، حاضري: {fmt(importResult.attendance)}، معاشونه: {fmt(importResult.salaries)}. {Number(importResult.skipped_orders||0)>0?'تکراري فرمایشونه نه دي وارد شوي: '+fmt(importResult.skipped_orders)+'.':''} {Number(importResult.skipped_dispatches||0)>0?'نه وارد شوي لېږدونه: '+fmt(importResult.skipped_dispatches)+'.':''}</div>}
   </div>
 
-  <UserProvisioning onProvisionFixed={onProvisionFixed}/>
+  <UserProvisioning onCreateUsers={onCreateUsers}/>
  </div>
 }
 
