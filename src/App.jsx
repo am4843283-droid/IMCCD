@@ -330,6 +330,10 @@ function SettingsPage({font,setFont,email,excelArchive,archiveSheet,setArchiveSh
    {importResult&&<div className="alert" style={{marginTop:14,display:'block'}}>واردول بشپړ شول — پېرېدونکي: {fmt(importResult.customers)}، فرمایشونه: {fmt(importResult.orders)}، سټاک توکي: {fmt(importResult.stock_items)}، لېږدونه: {fmt(importResult.dispatches)}، کارکوونکي: {fmt(importResult.employees)}، حاضري: {fmt(importResult.attendance)}، معاشونه: {fmt(importResult.salaries)}. {Number(importResult.skipped_orders||0)>0?'تکراري فرمایشونه نه دي وارد شوي: '+fmt(importResult.skipped_orders)+'.':''} {Number(importResult.skipped_dispatches||0)>0?'نه وارد شوي لېږدونه: '+fmt(importResult.skipped_dispatches)+'.':''}</div>}
   </div>
 
+  <div className="table-card settings-card" style={{marginTop:18}}>
+   <div className="page-toolbar"><div><h3>د Excel د ټولو پاڼو اصلي آرشیف</h3><p>د وارد شوي فایل هر شیټ او ټول ډک کالمونه دلته لیدل کېږي.</p></div><button type="button" className="btn secondary" onClick={onLoadExcelArchive} disabled={archiveBusy}>{archiveBusy?'لوستل کېږي...':'آرشیف تازه کړئ'}</button></div>
+   {archiveNames.length>0?<><div className="form-grid"><Field label="Excel پاڼه"><select value={archiveSheet} onChange={e=>setArchiveSheet(e.target.value)}>{archiveNames.map(n=><option key={n} value={n}>{n} · {excelArchive[n]?.length||0} قطارونه</option>)}</select></Field></div><div className="table-wrap" style={{maxHeight:560,overflow:'auto'}}><table><thead><tr><th>Excel Row</th>{Array.from({length:archiveCols},(_,i)=><th key={i}>{String.fromCharCode(65+i)}</th>)}</tr></thead><tbody>{archiveRows.map(row=><tr key={row.row}><td>{row.row}</td>{Array.from({length:archiveCols},(_,i)=><td key={i}>{cellText(row.cells?.[i])}</td>)}</tr>)}</tbody></table></div></>:<p className="font-note">{archiveBusy?'د Excel آرشیف لوستل کېږي...':'تر اوسه د Excel فایل نه دی وارد شوی.'}</p>}
+  </div>
   <UserProvisioning onCreateUsers={onCreateUsers}/>
  </div>
 }
