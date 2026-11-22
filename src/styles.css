@@ -100,3 +100,87 @@ td{font-size:15px!important}
  th{font-size:14px!important}
  td{font-size:15px!important}
 }
+
+
+/* IMCCD readability: larger, stronger typography and clearer data panels */
+.brand-logo-wrap{width:48px;height:48px;border-radius:13px;background:#fff;display:grid;place-items:center;padding:3px;flex:0 0 auto;box-shadow:0 5px 15px #0002}
+.brand-logo-wrap.large{width:88px;height:88px;border-radius:22px;padding:5px;margin:0 auto 16px}
+.brand-logo{width:100%;height:100%;object-fit:contain;border-radius:10px}
+.logo-welcome{background:#fff!important;padding:5px;overflow:hidden}
+.logo-welcome img{width:100%;height:100%;object-fit:contain;border-radius:14px}
+:root{font-size:18px!important}
+.sidebar{width:278px}
+.main{margin-right:278px}
+.nav-item{font-size:18px!important;padding:15px 14px!important;min-height:52px}
+.nav-caption{font-size:15px!important}
+.brand b{font-size:24px!important}
+.brand small{font-size:14px!important}
+.topbar{height:100px;padding:0 32px}
+.topbar h1{font-size:29px!important}
+.eyebrow{font-size:12px!important}
+.content{font-size:18px!important}
+.welcome h2{font-size:39px!important;line-height:1.65!important}
+.welcome p{font-size:23px!important;line-height:1.7!important}
+.welcome-icon{width:90px;height:90px}
+.page-toolbar h2,.section-heading h3{font-size:27px!important}
+.page-toolbar p,.section-heading p{font-size:17px!important;line-height:1.8}
+.stat-top{font-size:17px!important}
+.stat-card strong{font-size:38px!important}
+.stat-card small{font-size:15px!important}
+th{font-size:18px!important;padding:17px 19px!important}
+td{font-size:18px!important;padding:17px 19px!important;line-height:1.7}
+.table-tools,.table-tools>span{font-size:16px!important}
+.searchbox input{font-size:17px!important;min-height:42px}
+.btn{font-size:18px!important;padding:15px 20px!important;min-height:48px}
+.form-grid label,.login-panel label{font-size:18px!important}
+.form-grid input,.form-grid select,.form-grid textarea,.login-panel input,textarea{font-size:19px!important;min-height:54px;padding:13px 14px!important}
+.form-grid textarea,textarea{min-height:110px}
+.form-grid{gap:18px}
+.form-grid label{line-height:1.8}
+.settings-card h3{font-size:27px!important}
+.settings-card p,.font-note{font-size:17px!important;line-height:2}
+.font-option{font-size:18px!important;padding:17px}
+.font-option span{font-size:19px!important}
+.font-preview{font-size:30px!important}
+.back-btn{font-size:18px!important;padding:13px 18px}
+.status{font-size:16px!important;padding:6px 10px;border-radius:8px;background:#e5f5eb}
+.stat-card:nth-child(1){border-top:4px solid #4388d6}
+.stat-card:nth-child(2){border-top:4px solid #d7a34a}
+.stat-card:nth-child(3){border-top:4px solid #3f9c7a}
+.stat-card:nth-child(4){border-top:4px solid #8a6bc4}
+.table-card{border-color:#dce7f0}
+.table-wrap tbody tr:nth-child(even) td{background:#f1f7fc}
+.table-wrap tbody tr:hover td{background:#e8f2fa}
+.factory-table thead th{background:#e9f4ed;color:#174c37!important}
+.factory-sales-table thead th{background:#edf1fb;color:#273f73!important}
+.factory-table,.factory-sales-table{border:1px solid #d8e6dc}
+.form-grid input,.form-grid select,.form-grid textarea{border:1px solid #b8c9d8!important;background:#fbfdff!important;border-radius:10px}
+.form-grid input:focus,.form-grid select:focus,.form-grid textarea:focus{border-color:#2e7797!important;box-shadow:0 0 0 3px #2e77971c}
+.invoice-actions-top{background:#fff;border:1px solid #dce5ee;border-radius:14px;box-shadow:0 4px 16px #16334d12}
+@media(max-width:760px){
+ .sidebar{width:290px}
+ .main{margin-right:0}
+ .topbar{height:82px;padding:0 12px}
+ .topbar h1{font-size:24px!important}
+ .eyebrow{font-size:11px!important}
+ .content{padding:20px 12px 42px}
+ .welcome{padding:22px 15px}
+ .welcome h2{font-size:29px!important;line-height:1.8!important}
+ .welcome p{font-size:19px!important}
+ .welcome-icon{width:62px;height:62px}
+ .page-toolbar h2,.section-heading h3{font-size:23px!important}
+ .page-toolbar p,.section-heading p{font-size:15px!important}
+ .stat-top{font-size:14px!important}
+ .stat-card strong{font-size:30px!important}
+ .stat-card small{font-size:13px!important}
+ th{font-size:16px!important;padding:14px 13px!important}
+ td{font-size:16px!important;padding:14px 13px!important}
+ .btn{font-size:16px!important;padding:13px 15px!important}
+ .form-grid label,.login-panel label{font-size:16px!important}
+ .form-grid input,.form-grid select,.form-grid textarea,.login-panel input,textarea{font-size:18px!important;min-height:52px}
+ .settings-card h3{font-size:23px!important}
+ .settings-card p,.font-note{font-size:15px!important}
+ .back-btn{font-size:15px!important;padding:10px 11px}
+ .brand-logo-wrap.large{width:72px;height:72px}
+ .invoice-action-btn{font-size:18px!important}
+}
