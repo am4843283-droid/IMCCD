@@ -319,23 +319,24 @@ function InvoicesPage({invoices,items,orders,customers,onCreate,canCreate}){
 
 function UserProvisioning({onCreateUsers}){
  const initial=[
-  {username:'Jameelurrahman',full_name:'Jameel ur Rahman',email:'jamilsherzad1@gmail.com',role:'manager',password:''},
-  {username:'Doctorsahib',full_name:'Doctor Sahib',email:'rahman.shirzad2006@gmail.com',role:'manager',password:''},
-  {username:'Mudeersahib',full_name:'Mudeer Sahib',email:'rozbah.zalgai@gmail.com',role:'manager',password:''},
-  {username:'Mehman1',full_name:'Guest 1',email:'',role:'viewer',password:''},
-  {username:'Mehman2',full_name:'Guest 2',email:'',role:'viewer',password:''},
-  {username:'Mehman3',full_name:'Guest 3',email:'',role:'viewer',password:''},
-  {username:'Mehman4',full_name:'Guest 4',email:'',role:'viewer',password:''},
-  {username:'Mehman5',full_name:'Guest 5',email:'',role:'viewer',password:''}
+  {username:'Jameelurrahman',full_name:'Jameel ur Rahman',email:'jamilsherzad1@gmail.com',role:'manager'},
+  {username:'Doctorsahib',full_name:'Doctor Sahib',email:'rahman.shirzad2006@gmail.com',role:'manager'},
+  {username:'Mudeersahib',full_name:'Mudeer Sahib',email:'rozbah.zalgai@gmail.com',role:'manager'},
+  {username:'Mehman1',full_name:'Guest 1',email:'',role:'viewer'},
+  {username:'Mehman2',full_name:'Guest 2',email:'',role:'viewer'},
+  {username:'Mehman3',full_name:'Guest 3',email:'',role:'viewer'},
+  {username:'Mehman4',full_name:'Guest 4',email:'',role:'viewer'},
+  {username:'Mehman5',full_name:'Guest 5',email:'',role:'viewer'}
  ];
- const [users,setUsers]=useState(initial),[busy,setBusy]=useState(false),[result,setResult]=useState('');
- async function submit(e){e.preventDefault();setResult('');if(users.some(u=>u.password.length<8)){setResult('د هر حساب پټ نوم باید لږ تر لږه ۸ توري ولري.');return;}setBusy(true);const response=await onCreateUsers(users);setBusy(false);if(response?.success){setResult('بریالي شول: '+response.users.map(u=>u.full_name).join('، '));setUsers(initial.map(u=>({...u})));}else if(response?.error)setResult(response.error);else setResult('کارنونه جوړ نه شول؛ د تېروتنې پیغام وګورئ.');}
+ const [users,setUsers]=useState(initial),[sharedPassword,setSharedPassword]=useState(''),[busy,setBusy]=useState(false),[result,setResult]=useState('');
+ async function submit(e){e.preventDefault();setResult('');if(sharedPassword.length<8){setResult('پټ نوم باید لږ تر لږه ۸ توري ولري.');return;}setBusy(true);const response=await onCreateUsers(users.map(u=>({...u,password:sharedPassword})));setBusy(false);if(response?.success){setResult('بریالي شول: '+response.users.map(u=>u.full_name).join('، '));setUsers(initial.map(u=>({...u})));setSharedPassword('');}else if(response?.error)setResult(response.error);else setResult('کارنونه جوړ نه شول؛ د تېروتنې پیغام وګورئ.');}
  return <div className="table-card settings-card" style={{marginTop:18}}>
-  <h3>د مدیرانو او مېلمنو حسابونه</h3><p>دا حسابونه یوازې اډمین جوړولی شي. پټ نومونه یوازې د حساب جوړولو پر مهال لېږل کېږي؛ اپ یې په ښکاره بڼه نه ساتي.</p>
+  <h3>د مدیرانو او مېلمنو حسابونه</h3><p>دا حسابونه یوازې اډمین جوړولی شي. لاندې یو ګډ پټ نوم ټولو اتو حسابونو ته کارول کېږي؛ پټ نوم په اپ کې نه ساتل کېږي.</p>
   <form onSubmit={submit}>
-   <div className="table-wrap"><table><thead><tr><th>ښودل کېدونکی نوم</th><th>کارن نوم</th><th>ایمیل</th><th>صلاحیت</th><th>پټ نوم</th></tr></thead><tbody>
-    {users.map((u,i)=><tr key={u.username}><td><b>{u.full_name}</b></td><td>{u.username}</td><td><input type="email" autoComplete="email" value={u.email||''} onChange={e=>setUsers(prev=>prev.map((x,j)=>j===i?{...x,email:e.target.value}:x))} placeholder="اختیاري ایمیل"/></td><td>{u.role==='manager'?'Manager':'Guest / View only'}</td><td><input type="password" required minLength={8} autoComplete="new-password" value={u.password} onChange={e=>setUsers(prev=>prev.map((x,j)=>j===i?{...x,password:e.target.value}:x))} placeholder="لږ تر لږه ۸ توري"/></td></tr>)}
+   <div className="table-wrap"><table><thead><tr><th>ښودل کېدونکی نوم</th><th>کارن نوم</th><th>ایمیل</th><th>صلاحیت</th></tr></thead><tbody>
+    {users.map((u,i)=><tr key={u.username}><td><b>{u.full_name}</b></td><td>{u.username}</td><td><input type="email" autoComplete="email" value={u.email||''} onChange={e=>setUsers(prev=>prev.map((x,j)=>j===i?{...x,email:e.target.value}:x))} placeholder="اختیاري ایمیل"/></td><td>{u.role==='manager'?'Manager':'Guest / View only'}</td></tr>)}
    </tbody></table></div>
+   <label style={{display:'block',marginTop:14}}>د ټولو ۸ حسابونو ګډ پټ نوم<input type="password" required minLength={8} autoComplete="new-password" value={sharedPassword} onChange={e=>setSharedPassword(e.target.value)} placeholder="لږ تر لږه ۸ توري" style={{display:'block',width:'100%',maxWidth:420,marginTop:6}}/></label>
    <button className="btn primary" disabled={busy} style={{marginTop:14}}>{busy?'حسابونه جوړېږي...':'ټول ۸ حسابونه جوړ کړئ'}</button>
   </form>
   {result&&<p className="font-note" style={{marginTop:12}}>{result}</p>}
