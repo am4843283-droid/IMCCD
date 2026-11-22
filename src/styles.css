@@ -220,3 +220,19 @@ button, .btn { font-size:19px !important; font-weight:750 !important; min-height
  .table-wrap th { font-size:17px !important; }
  input,select,textarea,button,.btn { font-size:17px !important; }
 }
+
+
+/* Strong contrast for factory identity, dashboard labels and logo visibility */
+.brand b{color:#fff!important;font-size:23px!important;font-weight:900!important}
+.brand small{color:#f1f5f9!important}
+.brand-logo-wrap{display:grid!important;place-items:center!important;width:58px!important;height:58px!important;min-width:58px!important;background:#fff!important;border:2px solid #e5bd70!important;border-radius:14px!important;padding:3px!important;overflow:hidden!important}
+.brand-logo-wrap img,.brand-logo{display:block!important;width:100%!important;height:100%!important;object-fit:contain!important;opacity:1!important;visibility:visible!important}
+.logo-welcome{background:#fff!important;border:2px solid #e5bd70!important;padding:5px!important;overflow:hidden!important}
+.logo-welcome img{display:block!important;width:100%!important;height:100%!important;object-fit:contain!important}
+.stat-card small,.mini-card div:nth-child(2) span{font-size:15px!important;color:#111827!important;font-weight:800!important}
+.stat-top{color:#111827!important}
+.attendance-grid{min-width:max-content}
+.attendance-grid th,.attendance-grid td{border:1px solid #dbe3ec}
+.attendance-grid tbody tr:nth-child(even){background:#f8fafc}
+.attendance-grid button:disabled{opacity:1}
+@media(max-width:760px){.brand-logo-wrap{width:52px!important;height:52px!important;min-width:52px!important}.stat-card small,.mini-card div:nth-child(2) span{font-size:14px!important}}
