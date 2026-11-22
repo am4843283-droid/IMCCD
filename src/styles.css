@@ -184,3 +184,39 @@ td{font-size:18px!important;padding:17px 19px!important;line-height:1.7}
  .brand-logo-wrap.large{width:72px;height:72px}
  .invoice-action-btn{font-size:18px!important}
 }
+
+
+/* Readability upgrade: larger type, stronger contrast, clearer data areas */
+:root { --text:#111827; --muted:#374151; --border:#cbd5e1; }
+body { font-size:20px !important; color:#111827 !important; }
+h1 { font-size:clamp(30px,3vw,42px) !important; font-weight:850 !important; color:#101827 !important; }
+h2,.page-toolbar h2 { font-size:36px !important; line-height:1.35 !important; font-weight:850 !important; color:#101827 !important; }
+h3,.section-title,.table-card h3 { font-size:29px !important; line-height:1.4 !important; font-weight:800 !important; color:#172033 !important; }
+p, label, .nav-item, .sidebar, .topbar, .eyebrow, .font-note { font-size:19px !important; }
+.table-wrap table { font-size:18px !important; }
+.table-wrap th { font-size:19px !important; font-weight:850 !important; color:#111827 !important; background:#dce9f6 !important; }
+.table-wrap td { color:#172033 !important; font-weight:600 !important; }
+.table-wrap tbody tr:nth-child(even) { background:#f0f6fb !important; }
+.table-wrap tbody tr:hover { background:#e2edf8 !important; }
+input, select, textarea { font-size:19px !important; min-height:48px; color:#111827 !important; border-color:#94a3b8 !important; }
+button, .btn { font-size:19px !important; font-weight:750 !important; min-height:46px; }
+.card, .table-card, .stat-card, .summary-card { border-color:#b9c8d8 !important; }
+.stat-card:nth-child(4n+1) { background:#eaf3ff !important; }
+.stat-card:nth-child(4n+2) { background:#e9f8f0 !important; }
+.stat-card:nth-child(4n+3) { background:#fff5e7 !important; }
+.stat-card:nth-child(4n+4) { background:#f3edff !important; }
+.table-card { background:#ffffff !important; box-shadow:0 4px 18px rgba(15,23,42,.07) !important; }
+.page-toolbar { margin-bottom:24px !important; }
+.form-grid { gap:16px !important; }
+.form-grid label { font-weight:750 !important; color:#172033 !important; }
+.form-grid input,.form-grid select,.form-grid textarea { min-height:52px !important; padding:12px 14px !important; }
+@media(max-width:700px) {
+ body { font-size:18px !important; }
+ h1 { font-size:30px !important; }
+ h2,.page-toolbar h2 { font-size:32px !important; }
+ h3,.section-title,.table-card h3 { font-size:25px !important; }
+ p,label,.nav-item,.sidebar,.topbar { font-size:18px !important; }
+ .table-wrap table { font-size:16px !important; }
+ .table-wrap th { font-size:17px !important; }
+ input,select,textarea,button,.btn { font-size:17px !important; }
+}
